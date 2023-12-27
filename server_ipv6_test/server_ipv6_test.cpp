@@ -51,12 +51,21 @@ int main() {
         return -1;
     }
 
-    //std::cout << "Connection accepted from: " << inet_ntoa() << std::endl;    
     inet_ntop(AF_INET6, (void *)&clientAddr.sin6_addr, clientAddr6_str, sizeof(clientAddr6_str));
     std::cout << "Connection accepted from: " << clientAddr6_str << std::endl;
 
-    // Client로 데이터 전송
-    ;
+    // Client에서 보낸 데이터 출력
+    char buffer[1024];
+    int bytesRead;
+    while (true) {
+        memset(buffer, 0, sizeof(buffer));
+        while ((bytesRead = recv(clientSocket, buffer, sizeof(buffer), 0)) > 0) {
+            buffer[bytesRead] = '\0';
+            std::cout << "Received : " << buffer << std::endl;
+        }
+    }
+
+    std::cout << "Connection closed\n" << std::endl;
 
     // 연결 종료
     close(clientSocket);
